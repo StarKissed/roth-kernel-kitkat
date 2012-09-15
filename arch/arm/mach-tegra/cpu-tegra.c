@@ -41,6 +41,12 @@
 #include "clock.h"
 #include "cpu-tegra.h"
 #include "dvfs.h"
+#include "pm.h"
+
+#ifdef CONFIG_TEGRA_MPDECISION
+/* mpdecision notifier */
+extern int mpdecision_gmode_notifier(void);
+#endif
 
 /* tegra throttling and edp governors require frequencies in the table
    to be in ascending order */
@@ -510,6 +516,8 @@ int tegra_update_cpu_speed(unsigned long rate)
 {
 	int ret = 0;
 	struct cpufreq_freqs freqs;
+        unsigned long rate_save = rate;
+        int status = 1;
 
 	freqs.old = tegra_getspeed(0);
 	freqs.new = rate;
@@ -520,6 +528,32 @@ int tegra_update_cpu_speed(unsigned long rate)
 
 	if (freqs.old == freqs.new)
 		return ret;
+
+	if (freqs.new < rate_save && rate_save >= 880000) {
+		if (is_lp_cluster()) {
+
+			/* set rate to max of LP mode */
+			ret = clk_set_rate(cpu_clk, 475000 * 1000);
+#ifndef CONFIG_TEGRA_MPDECISION
+			/* change to g mode */
+			clk_set_parent(cpu_clk, cpu_g_clk);
+#else
+                        /*
+                         * the above variant is now no longer preferred since
+                         * mpdecision would not know about this. Notify mpdecision
+                         * instead to switch to G mode
+                         */
+                        status = mpdecision_gmode_notifier();
+                        if (status == 0)
+                                pr_err("%s: couldn't switch to gmode (freq)", __func__ );
+#endif
+			/* restore the target frequency, and
+			 * let the rest of the function handle
+			 * the frequency scale up
+			 */
+			freqs.new = rate_save;
+		}
+	}
 
 	/*
 	 * Vote on memory bus frequency based on cpu frequency

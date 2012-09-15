@@ -50,6 +50,11 @@ bool tegra_all_cpus_booted;
 
 static DECLARE_BITMAP(tegra_cpu_init_bits, CONFIG_NR_CPUS) __read_mostly;
 const struct cpumask *const tegra_cpu_init_mask = to_cpumask(tegra_cpu_init_bits);
+
+#ifdef CONFIG_TEGRA_MPDECISION
+extern int mpdecision_gmode_notifier(void);
+#endif
+
 #define tegra_cpu_init_map	(*(cpumask_t *)tegra_cpu_init_mask)
 
 static DECLARE_BITMAP(tegra_cpu_power_up_by_fc, CONFIG_NR_CPUS) __read_mostly;
@@ -304,6 +309,7 @@ int tegra_boot_secondary(unsigned int cpu, struct task_struct *idle)
 			   - CPU mode switch is not allowed */
 			status = -EINVAL;
 		} else {
+
 #ifdef CONFIG_CPU_FREQ
 			/* set cpu rate is within g-mode range before switch */
 			unsigned int speed = max(
@@ -314,6 +320,18 @@ int tegra_boot_secondary(unsigned int cpu, struct task_struct *idle)
 			status = tegra_cluster_switch(cpu_clk, cpu_g_clk);
 		}
 
+#ifndef CONFIG_TEGRA_MPDECISION
+			/* change to g mode */
+			status = clk_set_parent(cpu_clk, cpu_g_clk);
+#else
+                        /*
+                         * the above variant is now no longer preferred since
+                         * mpdecision would not know about this. Notify mpdecision
+                         * instead to switch to G mode
+                         */
+                        status = mpdecision_gmode_notifier();
+#endif
+		}
 		if (status)
 			goto done;
 	}
