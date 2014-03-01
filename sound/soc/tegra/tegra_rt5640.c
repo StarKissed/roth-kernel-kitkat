@@ -65,6 +65,13 @@
 #define GPIO_EXT_MIC_EN BIT(3)
 #define GPIO_HP_DET     BIT(4)
 
+#define DAI_LINK_HIFI           0
+#define DAI_LINK_SPDIF          1
+#define DAI_LINK_BTSCO          2
+#define DAI_LINK_VOICE_CALL     3
+#define DAI_LINK_BT_VOICE_CALL  4
+#define NUM_DAI_LINKS   5
+
 struct tegra30_i2s *i2s_tfa = NULL;
 struct snd_soc_codec *codec_rt;
 

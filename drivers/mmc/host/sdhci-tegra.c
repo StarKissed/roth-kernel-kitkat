@@ -902,7 +902,7 @@ static void tegra_sdhci_set_clock(struct sdhci_host *sdhci, unsigned int clock)
 			mutex_unlock(&tegra_host->dpd->delay_lock);
 		}
 	}
-	sdhci->is_clk_on = tegra_host->clk_enabled;
+	//sdhci->is_clk_on = tegra_host->clk_enabled;
 	mutex_unlock(&tegra_host->set_clock_mutex);
 }
 static void tegra_sdhci_do_calibration(struct sdhci_host *sdhci)
@@ -2345,12 +2345,10 @@ static int __devinit sdhci_tegra_probe(struct platform_device *pdev)
 
 	pltfm_host->priv = tegra_host;
 	tegra_host->clk_enabled = true;
-<<<<<<< HEAD
-=======
-	host->is_clk_on = tegra_host->clk_enabled;
+
+	//host->is_clk_on = tegra_host->clk_enabled;
 	mutex_init(&tegra_host->set_clock_mutex);
 
->>>>>>> fccc332... mmc: sdhci: tegra: exclusive clk control
 	tegra_host->max_clk_limit = plat->max_clk_limit;
 	tegra_host->ddr_clk_limit = plat->ddr_clk_limit;
 	tegra_host->sd_detect_in_suspend = plat->sd_detect_in_suspend;
