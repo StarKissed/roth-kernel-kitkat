@@ -87,16 +87,8 @@ GTAGS
 
 0
 
-buildImg/boot.img
-
-buildImg/zImage
-
-buildKernel.sh
-
-shieldSKU/TwistedZero_StarKissed-JB43-Roth.zip
-
+*/boot.img
+*/zImage
+shieldSKU/*.zip
 shieldSKU/boot.img
-
 tegra11_android_defconfig
-
-shieldSKU/LoungeKatt_StarKissed-JB43-Roth.zip
