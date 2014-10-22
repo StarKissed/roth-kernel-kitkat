@@ -84,3 +84,11 @@ GTAGS
 *.orig
 *~
 \#*#
+
+0
+
+*/boot.img
+*/zImage
+shieldSKU/*.zip
+shieldSKU/boot.img
+tegra11_android_defconfig
