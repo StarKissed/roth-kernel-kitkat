@@ -7,7 +7,7 @@
 PROPER=`echo $1 | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g'`
 
 HANDLE=LoungeKatt
-KERNELSPEC=/Volumes/android/roth-kernel-kitkat
+KERNELSPEC=/Volumes/android/starkissed-kernel-roth
 KERNELREPO=$DROPBOX_SERVER/TwistedServer/Playground/kernels
 TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi-4.7/bin/arm-eabi-
 MODULEOUT=$KERNELSPEC/buildimg/boot.img-ramdisk
@@ -66,8 +66,8 @@ if [ -e arch/arm/boot/zImage ]; then
     IMAGEFILE=boot-kk.$PUNCHCARD.img
     KENRELZIP="StarKissed-KK44_$PUNCHCARD-Roth.zip"
 
-    cp -r  buildimg/boot.img $KERNELREPO/shieldroth/boot-kk.img
-    cp -r  $KERNELREPO/shieldroth/boot-kk.img $KERNELREPO/gooserver/$IMAGEFILE
+    cp -r  buildimg/boot.img $KERNELREPO/shieldroth/boot-44.img
+    cp -r  $KERNELREPO/shieldroth/boot-44.img $KERNELREPO/gooserver/$IMAGEFILE
     scp $KERNELREPO/gooserver/$IMAGEFILE $GOOSERVER/shieldroth/kernel
     rm -R $KERNELREPO/gooserver/$IMAGEFILE
 

@@ -37,6 +37,13 @@ on init
     # create directory for mounting calibration partition
     mkdir /mnt/factory 0666 system system
 
+    #ozwpan driver: WiFi direct USB shim driver
+    chown system system /dev/ozwpan
+    chown system system /sys/class/ozmo_wpan/ozwpan/devices
+    chown system system /sys/class/ozmo_wpan/ozwpan/select
+    chown system system /sys/class/ozmo_wpan/ozwpan/bind
+    chmod 0660 /sys/class/ozmo_wpan/ozwpan/bind 
+
 on fs
     setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
     setprop ro.crypto.umount_sd false
@@ -254,6 +261,19 @@ service jscheck /system/bin/sh /system/bin/js_daemon.sh
     class main
     user system
     group system
+
+# Enable/disable CMU according to the colorspace
+on property:persist.sys.dpy0.colorspace=srgb
+    write /sys/class/graphics/fb0/device/cmu_enable 1
+
+on property:persist.sys.dpy0.colorspace=native
+    write /sys/class/graphics/fb0/device/cmu_enable 0
+
+on property:persist.sys.dpy1.colorspace=srgb
+    write /sys/class/graphics/fb1/device/cmu_enable 1
+
+on property:persist.sys.dpy1.colorspace=native
+    write /sys/class/graphics/fb1/device/cmu_enable 0
 
 on property:ro.debuggable=1
     # EMC debug interface
@@ -492,4 +512,3 @@ service mjpcap /system/bin/mjpcapservice
     class main
     user root
     group root net_raw
-

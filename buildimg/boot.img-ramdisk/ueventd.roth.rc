@@ -53,3 +53,5 @@
 /dev/quadd_auth 0660    system  system
 /sys/devices/platform/leds_pwm/leds/roth-led   delay_on      0660  system  system
 /sys/devices/platform/leds_pwm/leds/roth-led   delay_off     0660  system  system
+/dev/hidraw*    0660    system  system
+/dev/input/event*   0660    system  input 
