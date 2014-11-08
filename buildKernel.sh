@@ -67,9 +67,9 @@ if [ -e arch/arm/boot/zImage ]; then
     KENRELZIP="StarKissed-KK44_$PUNCHCARD-Roth.zip"
 
     cp -r  buildimg/boot.img $KERNELREPO/shieldroth/boot-44.img
-    cp -r  $KERNELREPO/shieldroth/boot-44.img $KERNELREPO/gooserver/$IMAGEFILE
-    scp $KERNELREPO/gooserver/$IMAGEFILE $GOOSERVER/shieldroth/kernel
-    rm -R $KERNELREPO/gooserver/$IMAGEFILE
+    cp -r  $KERNELREPO/shieldroth/boot-44.img ~/.goo/$IMAGEFILE
+    scp ~/.goo/$IMAGEFILE $GOOSERVER/shieldroth/kernel
+    rm -R ~/.goo/$IMAGEFILE
 
     echo "building boot package"
     cp -R boot.img shieldSKU
@@ -79,9 +79,9 @@ if [ -e arch/arm/boot/zImage ]; then
     cd ../
     cp -R $KERNELSPEC/shieldSKU/$zipfile $KERNELREPO/$zipfile
     if [ -e $KERNELREPO/$zipfile ]; then
-        cp -R $KERNELREPO/$zipfile $KERNELREPO/gooserver/$KENRELZIP
-        scp $KERNELREPO/gooserver/$KENRELZIP  $GOOSERVER/shieldroth
-        rm -r $KERNELREPO/gooserver/*
+        cp -R $KERNELREPO/$zipfile ~/.goo/$KENRELZIP
+        scp ~/.goo/$KENRELZIP  $GOOSERVER/shieldroth
+        rm -r ~/.goo/*
     fi
 
 fi
