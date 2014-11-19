@@ -7,7 +7,6 @@
 PROPER=`echo $1 | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g'`
 
 HANDLE=LoungeKatt
-KERNELSPEC=$(pwd)
 KERNELREPO=$DROPBOX_SERVER/TwistedServer/Playground/kernels
 TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi-4.7/bin/arm-eabi-
 MODULEOUT=buildimg/boot.img-ramdisk
