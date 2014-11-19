@@ -10,7 +10,7 @@ HANDLE=LoungeKatt
 KERNELSPEC=$(pwd)
 KERNELREPO=$DROPBOX_SERVER/TwistedServer/Playground/kernels
 TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi-4.7/bin/arm-eabi-
-MODULEOUT=$KERNELSPEC/buildimg/boot.img-ramdisk
+MODULEOUT=buildimg/boot.img-ramdisk
 GOOSERVER=loungekatt@upload.goo.im:public_html
 PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
 
@@ -21,14 +21,14 @@ CORES=`sysctl -a | grep machdep.cpu | grep core_count | awk '{print $2}'`
 THREADS=`sysctl -a | grep machdep.cpu | grep thread_count | awk '{print $2}'`
 CPU_JOB_NUM=$((($CORES * $THREADS) / 2))
 
-if [ -e $KERNELSPEC/buildimg/boot.img ]; then
-rm -R $KERNELSPEC/buildimg/boot.img
+if [ -e buildimg/boot.img ]; then
+rm -R buildimg/boot.img
 fi
-if [ -e $KERNELSPEC/buildimg/newramdisk.cpio.gz ]; then
-rm -R $KERNELSPEC/buildimg/newramdisk.cpio.gz
+if [ -e buildimg/newramdisk.cpio.gz ]; then
+rm -R buildimg/newramdisk.cpio.gz
 fi
-if [ -e $KERNELSPEC/buildimg/zImage ]; then
-rm -R $KERNELSPEC/buildimg/zImage
+if [ -e buildimg/zImage ]; then
+rm -R buildimg/zImage
 fi
 
 make tegra11_android_defconfig -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
@@ -80,7 +80,7 @@ if [ -e arch/arm/boot/zImage ]; then
     rm *.zip
     zip -r $zipfile *
     cd ../
-    cp -R $KERNELSPEC/shieldSKU/$zipfile $KERNELREPO/$zipfile
+    cp -R shieldSKU/$zipfile $KERNELREPO/$zipfile
     if [ -e $KERNELREPO/$zipfile ]; then
         cp -R $KERNELREPO/$zipfile ~/.goo/$KENRELZIP
         scp ~/.goo/$KENRELZIP  $GOOSERVER/shieldroth
