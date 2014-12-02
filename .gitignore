@@ -87,8 +87,11 @@ GTAGS
 
 0
 
-*/boot.img
+*.dtb
+*.dts
+
 */zImage
-shieldSKU/*.zip
-shieldSKU/boot.img
+*/*.img
+*/*.zip
+
 tegra11_android_defconfig

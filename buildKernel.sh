@@ -30,6 +30,9 @@ if [ -e buildimg/zImage ]; then
 rm -R buildimg/zImage
 fi
 
+cat config/portable_defconfig config/starkissed_defconfig > arch/arm/configs/tegra11_android_defconfig
+
+make -j$CPU_JOB_NUM clean CROSS_COMPILE=$TOOLCHAIN_PREFIX
 make tegra11_android_defconfig -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
 make tegra114-roth.dtb -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
 make -j$CPU_JOB_NUM ARCH=arm CROSS_COMPILE=$TOOLCHAIN_PREFIX
@@ -59,7 +62,8 @@ if [ -e arch/arm/boot/zImage ]; then
 
     fi
 
-    cat arch/arm/boot/zImage arch/arm/boot/tegra114-roth.dtb > buildimg/zImage
+    cp -r arch/arm/boot/tegra114-roth.dtb buildimg/tegra114-roth.dtb
+    cp -r arch/arm/boot/zImage buildimg/zImage
 
     cd buildimg
     ./img.sh
@@ -74,12 +78,12 @@ if [ -e arch/arm/boot/zImage ]; then
     rm -R ~/.goo/$IMAGEFILE
 
     echo "building boot package"
-    cp -R boot.img shieldSKU
-    cd shieldSKU
+    cp -R buildimg/boot.img starkissed
+    cd starkissed
     rm *.zip
     zip -r $zipfile *
     cd ../
-    cp -R shieldSKU/$zipfile $KERNELREPO/$zipfile
+    cp -R starkissed/$zipfile $KERNELREPO/$zipfile
     if [ -e $KERNELREPO/$zipfile ]; then
         cp -R $KERNELREPO/$zipfile ~/.goo/$KENRELZIP
         scp ~/.goo/$KENRELZIP  $GOOSERVER/shieldroth
