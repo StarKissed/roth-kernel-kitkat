@@ -5,12 +5,13 @@
 # This script is designed by Twisted Playground for use on MacOSX 10.7 but can be modified for other distributions of Mac and Linux
 
 PROPER=`echo $1 | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g'`
-
+KERNELDIR=`pwd`
 HANDLE=LoungeKatt
-KERNELREPO=$DROPBOX_SERVER/TwistedServer/Playground/kernels
+KERNELREPO=$DROPBOX_SERVER/TwistedServer/StarKissed/kernels
 TOOLCHAIN_PREFIX=/Volumes/android/android-toolchain-eabi-4.7/bin/arm-eabi-
-MODULEOUT=buildimg/boot.img-ramdisk
-GOOSERVER=loungekatt@upload.goo.im:public_html
+MODULEOUT=starkissed/system
+KERNELHOST=public_html/shieldroth
+GOOSERVER=upload.goo.im:$KERNELHOST
 PUNCHCARD=`date "+%m-%d-%Y_%H.%M"`
 
 zipfile=$HANDLE"_StarKissed-KK44-Roth.zip"
@@ -20,14 +21,8 @@ CORES=`sysctl -a | grep machdep.cpu | grep core_count | awk '{print $2}'`
 THREADS=`sysctl -a | grep machdep.cpu | grep thread_count | awk '{print $2}'`
 CPU_JOB_NUM=$((($CORES * $THREADS) / 2))
 
-if [ -e buildimg/boot.img ]; then
-rm -R buildimg/boot.img
-fi
-if [ -e buildimg/newramdisk.cpio.gz ]; then
-rm -R buildimg/newramdisk.cpio.gz
-fi
-if [ -e buildimg/zImage ]; then
-rm -R buildimg/zImage
+if [ -e arch/arm/boot/zImage ]; then
+    rm arch/arm/boot/zImage
 fi
 
 cat config/portable_defconfig config/starkissed_defconfig > arch/arm/configs/tegra11_android_defconfig
@@ -69,13 +64,7 @@ if [ -e arch/arm/boot/zImage ]; then
     ./img.sh
     cd ../
 
-    IMAGEFILE=boot-kk.$PUNCHCARD.img
     KENRELZIP="StarKissed-KK44_$PUNCHCARD-Roth.zip"
-
-    cp -r  buildimg/boot.img $KERNELREPO/shieldroth/boot-44.img
-    cp -r  $KERNELREPO/shieldroth/boot-44.img ~/.goo/$IMAGEFILE
-    scp ~/.goo/$IMAGEFILE $GOOSERVER/shieldroth/kernel
-    rm -R ~/.goo/$IMAGEFILE
 
     echo "building boot package"
     cp -R buildimg/boot.img starkissed
@@ -83,13 +72,18 @@ if [ -e arch/arm/boot/zImage ]; then
     rm *.zip
     zip -r $zipfile *
     cd ../
-    cp -R starkissed/$zipfile $KERNELREPO/$zipfile
-    if [ -e $KERNELREPO/$zipfile ]; then
-        cp -R $KERNELREPO/$zipfile ~/.goo/$KENRELZIP
-        scp ~/.goo/$KENRELZIP  $GOOSERVER/shieldroth
-        rm -r ~/.goo/*
+    if [ -e skrecovery/$zipfile ]; then
+        cp -R starkissed/$zipfile $KERNELREPO/$zipfile
+        if [ -e $KERNELREPO/$zipfile ]; then
+            if [ -e ~/.goo/ ]; then
+                rm -r ~/.goo/*
+            fi
+            cp -r $KERNELREPO/$zipfile ~/.goo/$KENRELZIP
+            existing=`ssh upload.goo.im ls $KERNELHOST/StarKissed*KK44*Roth.zip`
+            scp ~/.goo/$KENRELZIP  $GOOSERVER
+            ssh upload.goo.im rm $existing
+        fi
     fi
-
 fi
 
-cd $KERNELSPEC
+cd $KERNELDIR

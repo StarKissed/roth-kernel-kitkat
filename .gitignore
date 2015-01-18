@@ -90,6 +90,8 @@ GTAGS
 *.dtb
 *.dts
 
+zImage_dtb
+
 */zImage
 */*.img
 */*.zip

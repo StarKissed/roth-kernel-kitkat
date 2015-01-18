@@ -1,11 +1,7 @@
 if cat /etc/issue | grep Ubuntu; then
-
-BUILDSTRUCT=linux
-
+    BUILDSTRUCT=linux
 else
-
-BUILDSTRUCT=darwin
-
+    BUILDSTRUCT=darwin
 fi
 
 chmod a+r tegra114-roth.dtb
